@@ -69,10 +69,11 @@ Point<T>::Point(T xc, T yc) {
     p.second = yc;
     point_coords = p;
 }
+
 template <typename T>
 Point<T>::~Point() {
     // Destructor
-    std::cout << "Punto destruído" << std::endl;
+    //std::cout << "Punto destruído" << std::endl;
 };
 
 template<typename T>
