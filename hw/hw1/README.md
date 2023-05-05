@@ -3,14 +3,20 @@
 Este proyecto incluye las implementaciones de las clases punto, vector,
 y poligono de la tarea 1 del curso CC7515 - Computación en GPU.
 
-Para ejecutar el proyecto se debe correr el siguiente código en el terminal:
+Para compilar el proyecto se deben correr las siguientes líneas de código en el terminal:
 
 ```bash
 mkdir build
 cd build
 cmake ..
 make
-../bin/main
+```
+
+Todos los ejecutables quedán guardados en la carpeta `./bin` del proyecto:
+
+```bash
+./bin/main
+./bin/PointTests
 ```
 
 La estructura del proyecto contiene una carpeta `src` con el código fuente
@@ -23,7 +29,12 @@ proyecto. Finamlmente, los archivos de prueba se encuentran en...
    |_vector.hpp
    |_polygon.hpp
 /bin/
-   |_ejecutable
+   |_ejecutables
+/test/
+   |_CMakeLists.txt
+   |_test_point.cpp
+/vendor/
+   |_googletest
 CMakeLists.txt
 main.cpp
 README.md
