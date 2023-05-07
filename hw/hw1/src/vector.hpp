@@ -120,7 +120,7 @@ Vector<T>::Vector(T x, T y) {
 
 template<typename T>
 Vector<T>::~Vector() {
-    std::cout << "Vector destruído" << std::endl;
+    //std::cout << "Vector destruído" << std::endl;
 }
 
 template<typename T>
@@ -157,7 +157,7 @@ Vector<U> operator-(const Vector<U>& v1, const Vector<U>& v2) {
 
 template<typename U>
 bool operator==(const Vector<U>& v1, const Vector<U>& v2) {
-    return (v1.x == v2.x && v1.x == v2.y);
+    return (v1.x == v2.x && v1.y == v2.y);
 }
 
 // C++ nota: ejemplo de reciclar un método ya creado. No 
