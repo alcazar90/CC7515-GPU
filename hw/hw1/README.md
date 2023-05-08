@@ -6,9 +6,10 @@ y poligono de la tarea 1 del curso CC7515 - Computación en GPU.
 Clonar el repositorio e iniciar submodulo de testing.
 
 ```bash
-git clone project
+git clone https://github.com/alcazar90/CC7515-GPU
 git submodule init
 git submodule update
+cd hw/hw1
 ```
 
 Ver documentación sobre [submodulos en GIT](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
@@ -18,7 +19,8 @@ Ver documentación sobre [submodulos en GIT](https://git-scm.com/book/en/v2/Git-
 Para compilar el proyecto se deben correr las siguientes líneas de código en el terminal:
 
 ```bash
-mkdir buildcd build
+mkdir build
+cd build
 cmake ..
 make
 ```
