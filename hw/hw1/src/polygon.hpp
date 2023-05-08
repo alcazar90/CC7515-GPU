@@ -78,7 +78,7 @@ private:
 
 template<typename T>
 Polygon<T>::~Polygon() {
-    std::cout << "Vector destruído" << std::endl;
+    //std::cout << "Poligono destruído" << std::endl;
 }
 
 #endif
