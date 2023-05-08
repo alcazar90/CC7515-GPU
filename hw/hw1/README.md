@@ -3,13 +3,22 @@
 Este proyecto incluye las implementaciones de las clases punto, vector,
 y poligono de la tarea 1 del curso CC7515 - Computación en GPU.
 
+Clonar el repositorio e iniciar submodulo de testing.
+
+```bash
+git clone project
+git submodule init
+git submodule update
+```
+
+Ver documentación sobre [submodulos en GIT](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+
 ### Instrucciones para compilar 
 
 Para compilar el proyecto se deben correr las siguientes líneas de código en el terminal:
 
 ```bash
-mkdir build
-cd build
+mkdir buildcd build
 cmake ..
 make
 ```
@@ -53,18 +62,3 @@ main.cpp
 README.md
 ```
 
-### Submodulos y librería `googletest`
-
-En este proyecto utilicé la librería externa de testing [googletest](https://github.com/google/googletest) como submodulo de este proyect. Esto quiere
-decir que en la raíz de este repositorio, hay un archivo `.gitmodule` que contiene la información del submodulo a utilizar. Importante revisar
-esta pregunta sobre como inicializar un repositorio que contiene submodulos, la idea es que cuando uno clone este repo, se descargen las dependencias
-a estas librerías de manera automática. 
-
-```bash
-git clone project
-git submodule init
-```
-
-Sin embargo, para que esto ocurra se debe (i) clonar el proyecto
-como submodulo (e.g. `git submodule add https://github.com/chaconinc/DbConnector`) y (ii) realizar un commit del submodulo.
-```
