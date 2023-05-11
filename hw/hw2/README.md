@@ -1,6 +1,6 @@
-## The Game of Life
+## The Game of Life 👾
 
-Más acerca [Conway's Game of Life](https://conwaylife.com/book/)
+Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game of Life</a>.
 
 <center>
 <img src="https://global.discourse-cdn.com/mcneel/uploads/default/original/3X/9/9/9903c2258a7822736a2fcb9628e40bb63f8d0b28.gif">
