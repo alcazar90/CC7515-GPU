@@ -1,11 +1,17 @@
 ## The Game of Life
 
-Las reglas del juego:
+Más acerca [Conway's Game of Life](https://conwaylife.com/book/)
+
+<center>
+<img src="https://global.discourse-cdn.com/mcneel/uploads/default/original/3X/9/9/9903c2258a7822736a2fcb9628e40bb63f8d0b28.gif">
+</center>
+
+### Las reglas del juego
 
 1. Una célula nace de un espacio muerto si tiene 3 vecinos vivos.
 2. Una célula sobrevive en la próxima generación si tiene 2 o 3 vecinos.
 
-Objetivo de la tarea:
+### Objetivo de la tarea
 
 * Realizar una implementación serial en CPU
   * Implementar clase `grid`
