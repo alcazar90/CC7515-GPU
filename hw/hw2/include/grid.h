@@ -8,6 +8,7 @@
 #define GRID_H
 
 #include <vector>
+#include <string>
 
 template <typename T>
 class Grid {
@@ -21,15 +22,16 @@ public:
     int numRows() const;
     int numCols() const;
 
-    /*
+    std::vector<T>& operator[](int y);
+
     // Returns the element at the specified row/col
     T get(int x, int y) const;
 
-    // Remove all elements from this grid
-    void clear();
-
     // Sets every element in this grid to the given value
     void fill(T value);
+
+    // Remove all elements from this grid
+    void clear();
 
     // Returns true if this grid has 0 rows and/or 0 columns
     bool isEmpty() const;
@@ -37,21 +39,20 @@ public:
     // Returns true if the specified row/col is inside the bounds of this grid
     bool inBounds(int row, int col) const;
 
-    // Reinitializes this grid to have the specified number of rows and columns
-    void resize(int nRows, int nCols);
-
     // Replaces the element at the specified row/col with a new value
-    void set(int row, int col, T value);
+    void set(int x, int y, T value);
 
     // Returns the total number of elements in the grid
     int size() const;
 
     // Returns a printable single-line string of this grid
-    string toString() const;
+    std::string toString() const;
 
     // Returns a printable 2-D string representation of this grid.
-    string toString2D() const;
-    */
+    std::string toString2D() const;
+
+    // Reinitializes this grid to have the specified number of rows and columns
+    void resize(int nRows, int nCols);
 
 private:
     std::vector<std::vector<T>> grid;

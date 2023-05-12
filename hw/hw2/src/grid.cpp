@@ -1,4 +1,5 @@
 #include "../include/grid.h"
+#include <stdexcept>
 
 using namespace std;
 
@@ -7,6 +8,7 @@ Grid<T>::Grid() : nRows(0), nCols(0) {
 }
 
 /*
+// Otra forma de inicializar, ¿cuál es la diferencia?
 template <typename T>
 Grid<T>::Grid(int nRows, int nCols) : nRows(nRows), nCols(nCols), grid(nRows, std::vector<T>(nCols, 0)){
 }
@@ -33,62 +35,116 @@ int Grid<T>::numCols() const {
     return nCols;
 }
 
+template <typename T>
+std::vector<T> &Grid<T>::operator[](int y) {
+    return grid[y];
+}
+
+template <typename T>
+T Grid<T>::get(int x, int y) const {
+    // verificar si la celda (x, y) se encuentra en los limites de la grilla
+    if (x < 0 || x >= nRows || y < 0 || y >= nCols) {
+        throw std::out_of_range("Invalid index");
+    }
+    const std::vector<T>& row = grid[x];
+    return row[y];
+}
+
+template <typename T>
+void Grid<T>::fill(T value) {
+    for (int i = 0; i < nRows; i++) {
+        std::vector<T>& row = grid[i];
+        for (int j = 0; j < nCols; j++) {
+            row[j] = value;
+        }
+    }
+}
+
+template <typename T>
+void Grid<T>::clear() {
+    this->fill(0);
+}
+
+template <typename T>
+bool Grid<T>::isEmpty() const {
+    if (nRows == 0 || nCols == 0) {
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+bool Grid<T>::inBounds(int row, int col) const {
+    if ((row >= 0 && row < nRows) && (col >= 0 && col < nCols)) {
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+void Grid<T>::set(int x, int y, T v) {
+    std::vector<T>& row = grid[x];
+    row[y] = v;
+}
+
+template <typename T>
+int Grid<T>::size() const {
+    return this->nRows * this->nCols;
+}
+
+template <typename T>
+string Grid<T>::toString() const {
+    std::string result;
+    if (this->isEmpty()) {
+        result += "empty";
+        return result;
+    }
+    result += "[";
+    for (int i = 0; i < nRows; i++) {
+        const std::vector<T>& row = grid[i];
+        for (int j = 0; j < nCols; j++) {
+            result += std::to_string(row[j]);
+            if (j == nCols - 1 && i == nRows - 1) {
+                result += "]";
+            } else if (j == nCols - 1) {
+                result += " | ";
+            } else {
+                result += ", ";
+            }
+        }
+    }
+    return result;
+}
+
+template <typename T>
+string Grid<T>::toString2D() const {
+    std::string result;
+    if (this->isEmpty()) {
+        result += "empty";
+        return result;
+    }
+    result += "\n[";
+    for (int i = 0; i < nRows; i++) {
+        const std::vector<T>& row = grid[i];
+        for (int j = 0; j < nCols; j++) {
+            result += std::to_string(row[j]);
+            if (j == nCols - 1 && i == nRows - 1) {
+                result += "]";
+            } else if (j == nCols - 1) {
+                result += ",\n ";
+            } else {
+                result += ", ";
+            }
+        }
+    }
+    return result;
+}
+
+template <typename T>
+void Grid<T>::resize(int nRows, int nCols) {
+    this->nRows = nRows;
+    this->nCols = nCols;
+    this->grid = std::vector<std::vector<T>>(nRows, std::vector<T>(nCols, 0));
+}
+
 template class Grid<int>;
-
-/*
-template <typename T>
-T Grid<T>::get(int x, int y) const
-{
-    return T();
-}
-
-template <typename T>
-void Grid<T>::clear()
-{
-}
-
-template <typename T>
-void Grid<T>::fill(T value)
-{
-}
-
-template <typename T>
-bool Grid<T>::isEmpty() const
-{
-    return false;
-}
-
-template <typename T>
-bool Grid<T>::inBounds(int row, int col) const
-{
-    return false;
-}
-
-template <typename T>
-void Grid<T>::resize(int nRows, int nCols)
-{
-}
-
-template <typename T>
-void Grid<T>::set(int row, int col, T value)
-{
-}
-
-template <typename T>
-int Grid<T>::size() const
-{
-    return 0;
-}
-
-template <typename T>
-string Grid<T>::toString() const
-{
-    return string();
-}
-
-template <typename T>
-string Grid<T>::toString2D() const
-{
-    return string();
-}
-*/
