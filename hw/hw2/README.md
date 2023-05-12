@@ -1,4 +1,4 @@
-## The Game of Life 👾
+## Assignment 2: The Game of Life 👾
 
 Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game of Life</a>.
 
@@ -21,3 +21,7 @@ Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game
 * Implmenetar el algoritmo en CUDA
 * Implementar el algoritmo en OpenCL
 * Medir y comparar desempeño de las implementaciones bajo varios tamaños de grillas
+
+### Referencias
+
+`grid` clase página 210 e interface página 957.
