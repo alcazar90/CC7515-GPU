@@ -115,3 +115,11 @@ TEST_F(TestGrid, TestGridResize) {
     EXPECT_EQ(grid.numRows(), 5);
     EXPECT_EQ(grid.numCols(), 5);
 }
+
+TEST_F(TestGrid, TestGridPopulateRandom) {
+    std::cout << "grid vacía: " << grid.toString2D() << std::endl;
+    grid.populateRandom(0.5);
+    std::cout << "50% de la grilla con 1s: " << grid.toString2D() << std::endl;
+    grid.populateRandom(1.0);
+    std::cout << "100% de la grilla con 1s: " << grid.toString2D() << std::endl;
+}

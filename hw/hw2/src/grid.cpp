@@ -60,8 +60,35 @@ void Grid<T>::fill(T value) {
     }
 }
 
+// TODO: no es l a forma más óptima de hacerlo, pero funciona.
+// Agregar un método que entrega las coordenadas de las celdas que tienen 1s
+// y las que tienen 0s. De esta forma, solo se selecciona una celda aleatoria
+// del conjunto de celdas con 0s.
 template <typename T>
-void Grid<T>::clear() {
+void Grid<T>::populateRandom(double percentage) {
+    int total = nRows * nCols;
+    int num_ones = total * percentage;
+    int num_zeros = total - num_ones;
+    this->fill(0);
+    for (int i = 0; i < num_ones; i++) {
+        // C++ nota: rand() % nRows, da un número aleatorio entre 0 y nRows - 1
+        int x = rand() % nRows;
+        int y = rand() % nCols;
+        while (true) {
+            if (get(x, y) == 0) {
+                break; 
+            } else {
+                x = rand() % nRows;
+                y = rand() % nCols;
+            }
+        }
+        this->set(x, y, 1);
+    }
+}
+
+template <typename T>
+void Grid<T>::clear()
+{
     this->fill(0);
 }
 

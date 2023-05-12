@@ -30,6 +30,9 @@ public:
     // Sets every element in this grid to the given value
     void fill(T value);
 
+    // populateRandom fills % of the grid with 1s 
+    void populateRandom(double percentage);
+
     // Remove all elements from this grid
     void clear();
 
