@@ -20,6 +20,7 @@ target_include_directories(project INTERFACE .)
 set(SRC_FILES
     include/grid.h
     src/grid.cpp
+    gof_sequential.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})

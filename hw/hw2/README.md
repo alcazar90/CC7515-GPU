@@ -27,8 +27,9 @@ Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game
 1. Agregar método que entrega el conjunto de coordenadas `(x,y)` con celdas con 1s
 2. Agregar método que entregue el conjunto de coordenadas `(x, y)` con celdas con 0s
 3. Modificar método `grid.populateRandom(percentage)` para que escoga aleatoriamente del conjunto de 0s, en vez de samplear hasta que encuentre una celda disponible para modificar
-4. Implementar juego de la vida de forma secuencial, usar para verificar pocos pasos y el método `grid.toString2D`
-5. Implementar GUI para poder visualizar mejor la grilla y tener mayor control del programa:w
+4. ~~Implementar juego de la vida de forma secuencial, usar para verificar pocos pasos y el método `grid.toString2D`~~
+5. Implementar GUI para poder visualizar mejor la grilla y tener mayor control del programa
+6. Implementar código para extraer estadísticas del estado de un tablero en cada configuración (e.g. número celdas vivas, muertos, cantidad de clusters?)
 
 
 ### Referencias
