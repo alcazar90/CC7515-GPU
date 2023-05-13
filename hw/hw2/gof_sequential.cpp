@@ -39,7 +39,7 @@ int main() {
     board.populateRandom(0.5);
 
     for (int i = 0; i < NITER; i++) {
-        std::cout << "Generation " << i << "\n" << std::endl;
+        std::cout << "\nGeneration #" << i + 1 << std::endl;
         std::cout << "---------------------------------------" << std::endl;
         std::cout << board.toString2D() << std::endl;
         // Ininitialize a vector of tuples to keep track of the cells alive for
