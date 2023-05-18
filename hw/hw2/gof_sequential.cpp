@@ -9,6 +9,8 @@
 #include <iostream>
 #include <vector>
 #include <tuple>
+#include <time.h>
+#include <chrono>
 
 using namespace std;
 
@@ -38,10 +40,13 @@ int main() {
     // Fill with random cells alive;
     board.populateRandom(0.5);
 
+    // Calculate the time it takes the simulation
+    double itime = 0.0;
+    auto start = std::chrono::steady_clock::now();
     for (int i = 0; i < NITER; i++) {
-        std::cout << "\nGeneration #" << i + 1 << std::endl;
-        std::cout << "---------------------------------------" << std::endl;
-        std::cout << board.toString2D() << std::endl;
+        //std::cout << "\nGeneration #" << i + 1 << std::endl;
+        //std::cout << "---------------------------------------" << std::endl;
+        //std::cout << board.toString2D() << std::endl;
         // Ininitialize a vector of tuples to keep track of the cells alive for
         // the next generation
         std::vector<std::tuple<int, int>> nextGen;
@@ -71,6 +76,13 @@ int main() {
             board.set(std::get<0>(cell), std::get<1>(cell), 1);
         }
     }
+    auto end = std::chrono::steady_clock::now();
+    itime = (float)std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+
+    std::cout << "---------------------------------------" << std::endl;
+    // print the total time in seconds
+    std::cout << "Total time: " << itime / 1000000000.0 << " seconds" << std::endl;
+
     return 0;
 }
 
