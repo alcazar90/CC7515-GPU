@@ -11,6 +11,7 @@
 #include <tuple>
 #include <time.h>
 #include <chrono>
+#include "include/utils.hpp"
 
 using namespace std;
 
@@ -20,33 +21,59 @@ int countNeighbours(Grid<int> &grid, int x, int y);
 
 /* Main Program */
 int main() {
+    /*
     int NITER;
     int NROWS;
     int NCOLS;
+    */
+
+    // Inicializador - Configuracion de parámetros del juego
+    initGameConfig();
+
+    /*
     std::cout << "Please enter the number of iterations: ";
     std::cin >> NITER;
+    */
 
-    std::cout << "Now we will be set the grid size..." << std::endl;
+    Grid<int> board;
+
+    // Ideally the following lines asking for the number of rows and columns
+    // mode to the RANDOM part. The initializeFromFile should know from the
+    // board config the number of row and columns
+    /*
     std::cout << "Please enter the number of rows: " << std::endl;
     std::cin >> NROWS;
     std::cout << "Please enter the number of columns: " << std::endl;
     std::cin >> NCOLS;
-
-    std::cout << "Welcome to the game of life. We will play " << NITER << " generations...and the universe will be a grid of size " << NROWS << "x" << NCOLS << std::endl;
+    */
 
     // initialize a grid of size NROWS x NCOLS
-    Grid<int> board(NROWS, NCOLS);
+    board.resize(NROWS, NCOLS);
 
-    // Fill with random cells alive;
-    board.populateRandom(0.5);
+    if (filename == "RANDOM") {
+        // Fill with random cells alive;
+        board.populateRandom(0.5);
+    } else if (filename.find(".txt") != std::string::npos) {
+        board.initializeFromFile(filename);
+    } else {
+        std::cout << "Invalid input. Exiting..." << std::endl;
+        return 0;
+    }
+
+    std::cout << "Welcome to the game of life. We will play " << NITER << " generations...and the universe will be a grid of size " << NROWS << "x" << NCOLS << std::endl;
+    std::cout << "Here is your initial board configuration:\n";
+    std::cout << board.toString2D() << std::endl;
 
     // Calculate the time it takes the simulation
     double itime = 0.0;
     auto start = std::chrono::steady_clock::now();
     for (int i = 0; i < NITER; i++) {
-        //std::cout << "\nGeneration #" << i + 1 << std::endl;
-        //std::cout << "---------------------------------------" << std::endl;
-        //std::cout << board.toString2D() << std::endl;
+        // Print the board if PRETTYPRINT is true
+        if (PRETTYPRINT) {
+            std::cout << "\nGeneration " << i + 1 << ":" << std::endl;
+            std::cout << board.toString2D() << std::endl;
+        }
+
         // Ininitialize a vector of tuples to keep track of the cells alive for
         // the next generation
         std::vector<std::tuple<int, int>> nextGen;
@@ -55,23 +82,24 @@ int main() {
         // and count the number of neighbors
         for (int j = 0; j < NROWS; j++) {
             for (int k = 0; k < NCOLS; k++) {
+                int liveNeighbours = countNeighbours(board, j, k);
+
                 if (isAlive(board, j, k)) {
                     // check if the cell survives
-                    if (countNeighbours(board, j, k) >= 2) {
-                        // survives
+                    if (liveNeighbours == 2 || liveNeighbours == 3) {
                         nextGen.emplace_back(j, k);
                     }
                 } else {
                     // check if the cell is born
-                    if (countNeighbours(board, j, k) == 3) {
-                        // born
+                    if (liveNeighbours == 3) {
                         nextGen.emplace_back(j, k);
                     } 
                 }
             }
         }
-        // clear grid and set the next generation
+        // Clear the grid and set the next generation
         board.clear();
+
         for (auto &cell : nextGen) {
             board.set(std::get<0>(cell), std::get<1>(cell), 1);
         }
@@ -106,26 +134,48 @@ bool isAlive(Grid<int> &grid, int x, int y) {
  * -----------------------------------------------------------------------------
  * Returns the number of live neighbors of the cell at (x, y).
 */
-int countNeighbours(Grid<int> &grid, int x, int y) {
+int countNeighbours(Grid<int>& grid, int x, int y) {
     int count = 0;
+    int nRows = grid.numRows();
+    int nCols = grid.numCols();
 
-    // check top
-    if (x > 0 && grid.get(x - 1, y) == 1) {
+    // Check top
+    if (grid.get((x + nRows - 1) % nRows, y) == 1) {
         count++;
     }
 
-    // check bottom
-    if (x < grid.numRows() - 1 && grid.get(x + 1, y) == 1) {
+    // Check bottom
+    if (grid.get((x + 1) % nRows, y) == 1) {
         count++;
     }
 
-    // check left
-    if (y > 0 && grid.get(x, y - 1) == 1) {
+    // Check left
+    if (grid.get(x, (y + nCols - 1) % nCols) == 1) {
         count++;
     }
 
-    // check right
-    if (y < grid.numCols() - 1 && grid.get(x, y + 1) == 1) {
+    // Check right
+    if (grid.get(x, (y + 1) % nCols) == 1) {
+        count++;
+    }
+
+    // Check top-left
+    if (grid.get((x + nRows - 1) % nRows, (y + nCols - 1) % nCols) == 1) {
+        count++;
+    }
+
+    // Check top-right
+    if (grid.get((x + nRows - 1) % nRows, (y + 1) % nCols) == 1) {
+        count++;
+    }
+
+    // Check bottom-left
+    if (grid.get((x + 1) % nRows, (y + nCols - 1) % nCols) == 1) {
+        count++;
+    }
+
+    // Check bottom-right
+    if (grid.get((x + 1) % nRows, (y + 1) % nCols) == 1) {
         count++;
     }
 

@@ -9,12 +9,10 @@
 #include <random>
 #include <cstddef>
 #include <cassert>
+#include "include/utils.hpp"
 
 // Function prototypes
-//__device__ bool isAlive(const uint* grid, int x, int y, int nRows, int nCols);
-//__device__ int countLiveNeighbors(const uint* grid, int x, int y, int nRows, int nCols);
 typedef unsigned char ubyte;
-
 std::string toString2D(const ubyte* grid, int nRows, int nCols);
 void initializeBoardFromFile(ubyte* grid, int nRows, int nCols, const std::string& filename);
 void initializeBoardRandom(ubyte* grid, int nRows, int nCols);
@@ -49,17 +47,9 @@ __global__ void gameOfLifeKernel(const ubyte* grid, int nRows, int nCols,
 
 /* Main Program */
 int main() {
-    int NITER;
-    int NROWS;
-    int NCOLS;
-    std::cout << "Please enter the number of iterations: ";
-    std::cin >> NITER;
 
-    std::cout << "Now we will be set the initial grid configuration..." << std::endl;
-    std::cout << "Please enter the number of rows: ";
-    std::cin >> NROWS;
-    std::cout << "Please enter the number of columns: ";
-    std::cin >> NCOLS;
+    // Inicializador - Configuracion de parámetros del juego
+    initGameConfig();
 
     // Allocate memory for the game grid
     uint gridSize = NROWS * NCOLS;
@@ -67,11 +57,6 @@ int main() {
     ubyte* resultGrid;
     cudaMallocManaged(&grid, gridSize * sizeof(ubyte));
     cudaMallocManaged(&resultGrid, gridSize * sizeof(ubyte));
-
-    // Initialize the board
-    std::string filename;
-    std::cout << "Specify the name of the file to initialize the grid. If you want to initialize randomly, write 'RANDOM': ";
-    std::cin >> filename;
 
     if (filename == "RANDOM") {
         initializeBoardRandom(grid, NROWS, NCOLS);
@@ -108,8 +93,10 @@ int main() {
         std::swap(grid, resultGrid);
 
         // Print the grid
-        std::cout << "Generation " << (i + 1) << ":" << std::endl;
-        std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
+        if (PRETTYPRINT) {
+            std::cout << "Generation " << (i + 1) << ":" << std::endl;
+            std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
+        }
     }
 
     auto end = std::chrono::steady_clock::now();
