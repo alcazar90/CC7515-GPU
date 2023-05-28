@@ -24,13 +24,16 @@ Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game
 
 ### TODOs
 
-1. Agregar método que entrega el conjunto de coordenadas `(x,y)` con celdas con 1s
-2. Agregar método que entregue el conjunto de coordenadas `(x, y)` con celdas con 0s
-3. Modificar método `grid.populateRandom(percentage)` para que escoga aleatoriamente del conjunto de 0s, en vez de samplear hasta que encuentre una celda disponible para modificar
-4. ~~Implementar juego de la vida de forma secuencial, usar para verificar pocos pasos y el método `grid.toString2D`~~
-5. Implementar GUI para poder visualizar mejor la grilla y tener mayor control del programa
-6. Implementar código para extraer estadísticas del estado de un tablero en cada configuración (e.g. número celdas vivas, muertos, cantidad de clusters?)
-
+1. Normalizar interfaz de `std::cin` para que script benchmark ejecute los programas.
+2. Agregar compilación de la implementación en CUDA a CMakeLists.txt, por ahora se compila de la siguiente forma. Ideal que el output quedé `./bin/gof_cuda` junto a los demás.
+    ```bash
+    nvcc gof_cuda.cu -o gof_cuda
+    ```
+3. Actualizar en `gof_sequential.cpp` el método `CountNeighbors` para que ocupe operaciones de modulo, considerando vecinos las diagonales y el tablero ciclico.
+4. Agregar en `./test/` algo relacionado o un README con validación funcional de las implementaciones de _Game of Life_, generar un GIF por cada output o crear test set según ciertas configuraciones de tableros y estados de prueba que se encuentran en `./config/boardXX.txt`.
+5. Crear gráficos y tablas con información del _benchmark_
+6. Agregar interfaz para visualizar el juego usando `GLFW`
+7. Implementar en Kokkos (?)
 
 ### Referencias
 
