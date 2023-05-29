@@ -1,5 +1,9 @@
 #include "../include/grid.h"
 #include <stdexcept>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -150,17 +154,12 @@ string Grid<T>::toString2D() const {
         result += "empty";
         return result;
     }
-    result += "\n[";
     for (int i = 0; i < nRows; i++) {
         const std::vector<T>& row = grid[i];
         for (int j = 0; j < nCols; j++) {
-            result += std::to_string(row[j]);
-            if (j == nCols - 1 && i == nRows - 1) {
-                result += "]";
-            } else if (j == nCols - 1) {
-                result += ",\n ";
-            } else {
-                result += ", ";
+            result += (this->get(i, j) == 1) ? "1 " : ". ";
+            if (j == nCols - 1) {
+                result += "\n";
             }
         }
     }
@@ -172,6 +171,43 @@ void Grid<T>::resize(int nRows, int nCols) {
     this->nRows = nRows;
     this->nCols = nCols;
     this->grid = std::vector<std::vector<T>>(nRows, std::vector<T>(nCols, 0));
+}
+
+template <typename T>
+void Grid<T>::initializeFromFile(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Error opening file: " + filename);
+    }
+
+    std::vector<std::vector<T>> newGrid;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::vector<T> row;
+        std::istringstream iss(line);
+        T value;
+        while (iss >> value) {
+            row.push_back(value);
+        }
+        newGrid.push_back(row);
+    }
+
+    file.close();
+
+    int newRows = newGrid.size();
+    if (newRows == 0) {
+        throw std::runtime_error("Error: Empty file");
+    }
+    int newCols = newGrid[0].size();
+    for (int i = 1; i < newRows; ++i) {
+        if (newGrid[i].size() != newCols) {
+            throw std::runtime_error("Error: Inconsistent number of columns in the file");
+        }
+    }
+
+    grid = newGrid;
+    nRows = newRows;
+    nCols = newCols;
 }
 
 template class Grid<int>;

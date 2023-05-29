@@ -1,3 +1,12 @@
+/*
+ * File: test_grid.cpp
+ * -----------------------------
+ * Este archivo contiene los test unitarios para la implementación de la estructura
+ * de datos grid.h
+ * 
+ * En particular, se realizan pruebas para los distintos métodos, así como
+ * las formas de inicializar la estructura de datos.
+*/
 #include <gtest/gtest.h>
 #include "../include/grid.h"
 // TODO: eliminar "../src/grid.cpp" y usar el makefile. Problema con el archivo
@@ -56,7 +65,6 @@ TEST_F(TestGrid, TestFillGrid) {
     EXPECT_EQ(grid.get(9, 4), -1);
 }
 
-
 TEST_F(TestGrid, TestClearGrid) {
     grid.fill(1);
     EXPECT_EQ(grid.get(0, 0), 1);
@@ -102,7 +110,7 @@ TEST_F(TestGrid, TestGridtoString) {
     EXPECT_EQ(empty_grid.toString2D(), expected_empty_grid);
 
     std::string expected_nonempty_grid1D = "[0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0]";
-    std::string expected_nonempty_grid2D = "\n[0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0,\n 0, 0, 0, 0, 0]";
+    std::string expected_nonempty_grid2D = ". . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n. . . . . \n";
     EXPECT_EQ(grid.toString(), expected_nonempty_grid1D);
     EXPECT_EQ(grid.toString2D(), expected_nonempty_grid2D);
     //grid.set(0, 0, 1);
@@ -117,9 +125,19 @@ TEST_F(TestGrid, TestGridResize) {
 }
 
 TEST_F(TestGrid, TestGridPopulateRandom) {
-    std::cout << "grid vacía: " << grid.toString2D() << std::endl;
-    grid.populateRandom(0.5);
-    std::cout << "50% de la grilla con 1s: " << grid.toString2D() << std::endl;
+    std::string expected_nonempty_grid1D = "[0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0 | 0, 0, 0, 0, 0]";
+    std::string expected_nonempty_grid1D_after_populate = "[1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1 | 1, 1, 1, 1, 1]";
+    EXPECT_EQ(grid.toString(), expected_nonempty_grid1D);
     grid.populateRandom(1.0);
-    std::cout << "100% de la grilla con 1s: " << grid.toString2D() << std::endl;
+    EXPECT_EQ(grid.toString(), expected_nonempty_grid1D_after_populate);
+}
+
+TEST_F(TestGrid, TestGridInitializeFromFile) {
+    std::string expected_grid1D = "[0, 1, 1, 1, 0, 0 | 0, 0, 1, 0, 0, 0 | 0, 0, 1, 0, 1, 0 | 0, 0, 0, 0, 0, 0 | 1, 0, 0, 0, 0, 1 | 1, 1, 0, 0, 0, 0]";
+    Grid<int> grid2;
+    //std::cout << "grid2.toString2D(): " << grid2.toString2D() << std::endl;
+    grid2.initializeFromFile("../config/board01.txt");
+    //std::cout << "grid2.toString2D(): " << grid2.toString2D() << std::endl;
+    EXPECT_EQ(grid2.toString(), expected_grid1D);
+
 }

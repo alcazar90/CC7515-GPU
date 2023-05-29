@@ -82,6 +82,11 @@ int main() {
     auto start = std::chrono::steady_clock::now();
 
     for (int i = 0; i < NITER; ++i) {
+        // Print the grid
+        if (PRETTYPRINT) {
+            std::cout << "Generation " << (i + 1) << ":" << std::endl;
+            std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
+        }
 
         // Launch the kernel
         gameOfLifeKernel<<<blocksCount, threadsCount>>>(grid, NROWS, NCOLS, resultGrid);
@@ -92,11 +97,6 @@ int main() {
         // Swap values of two objects efficiently
         std::swap(grid, resultGrid);
 
-        // Print the grid
-        if (PRETTYPRINT) {
-            std::cout << "Generation " << (i + 1) << ":" << std::endl;
-            std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
-        }
     }
 
     auto end = std::chrono::steady_clock::now();

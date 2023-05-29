@@ -21,31 +21,11 @@ int countNeighbours(Grid<int> &grid, int x, int y);
 
 /* Main Program */
 int main() {
-    /*
-    int NITER;
-    int NROWS;
-    int NCOLS;
-    */
 
     // Inicializador - Configuracion de parámetros del juego
     initGameConfig();
 
-    /*
-    std::cout << "Please enter the number of iterations: ";
-    std::cin >> NITER;
-    */
-
     Grid<int> board;
-
-    // Ideally the following lines asking for the number of rows and columns
-    // mode to the RANDOM part. The initializeFromFile should know from the
-    // board config the number of row and columns
-    /*
-    std::cout << "Please enter the number of rows: " << std::endl;
-    std::cin >> NROWS;
-    std::cout << "Please enter the number of columns: " << std::endl;
-    std::cin >> NCOLS;
-    */
 
     // initialize a grid of size NROWS x NCOLS
     board.resize(NROWS, NCOLS);
@@ -67,7 +47,9 @@ int main() {
     // Calculate the time it takes the simulation
     double itime = 0.0;
     auto start = std::chrono::steady_clock::now();
+
     for (int i = 0; i < NITER; i++) {
+
         // Print the board if PRETTYPRINT is true
         if (PRETTYPRINT) {
             std::cout << "\nGeneration " << i + 1 << ":" << std::endl;
