@@ -57,6 +57,14 @@ public:
     // Reinitializes this grid to have the specified number of rows and columns
     void resize(int nRows, int nCols);
 
+    // Initialize a grid from a config file.txt. For example, given the following
+    // structure:
+    // 1 0 1 0
+    // 0 1 1 1
+    // 0 0 0 1
+    // 1 1 0 0
+    void initializeFromFile(const std::string& filename);
+
 private:
     std::vector<std::vector<T>> grid;
     int nRows;
