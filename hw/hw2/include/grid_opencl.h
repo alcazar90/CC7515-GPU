@@ -19,7 +19,7 @@ public:
     int numRows() const;
     int numCols() const;
 
-    std::vector<T>& operator[](int y);
+    T& operator[](int y);
 
     // Returns the element at the specified row/col
     T get(int x, int y) const;
@@ -52,8 +52,14 @@ public:
     // populateRandomGPU fills % of the grid with 1s using OpenCL
     void populateRandomOpenCL(double percentage);
 
+    // static populate
+    void staticPopulate();
+
+    // from txt file
+    void initializeBoardFromFile(int nRows, int nCols, const std::string& filename);
+
 private:
-    std::vector<std::vector<T>> grid;
+    std::vector<T> grid;
     int nRows;
     int nCols;
     cl::Buffer gridBuffer;

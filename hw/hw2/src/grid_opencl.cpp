@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 #include <chrono>
+#include <fstream>
 
 
 using namespace std;
@@ -17,7 +18,7 @@ Grid<T>::Grid(int nRows, int nCols)
 {
     this->nRows = nRows;
     this->nCols = nCols;
-    this->grid = std::vector<std::vector<T>>(nRows, std::vector<T>(nCols, 0));
+    this->grid = std::vector<T>(nRows * nCols);
 }
 
 template <typename T>
@@ -35,8 +36,8 @@ int Grid<T>::numCols() const {
 }
 
 template <typename T>
-std::vector<T> &Grid<T>::operator[](int y) {
-    return grid[y];
+T& Grid<T>::operator[](int y) {
+    return grid.at(y);
 }
 
 // ----------------------------------------------------------
@@ -52,16 +53,6 @@ void Grid<T>::toGPU(cl::Platform platform, cl::Device device, cl::Context contex
         std::cerr << "Error: la grilla debe tener un tamaño mayor a cero." << std::endl;
         return;
     }
-    
-    // cl_uint blockSize = device.getInfo<CL_DEVICE_MAX_WORK_ITEM_SIZES>()[0];
-    // cl_uint workGroupSize = device.getInfo<CL_DEVICE_MAX_WORK_GROUP_SIZE>();
-    // cl_uint numThreads = device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>();
-
-    // std::cout << "Block size: " << blockSize << std::endl;
-    // std::cout << "Work group size: " << workGroupSize << std::endl;
-
-    // // Blocks necessa
-    // const int numBlocks = ((nRows * nCols) + (blockSize * numThreads - 1)) / (blockSize * numThreads);
 
     // The context is assiged to the device and platform
     this->context = context;
@@ -79,32 +70,11 @@ void Grid<T>::toGPU(cl::Platform platform, cl::Device device, cl::Context contex
         std::cerr << "Error: la dimensión del buffer no es igual al tamaño de la grilla." << std::endl;
         return;
     }
-    
-    // We create a vector with the data of the grid in one dimension format,
-    // because for some reason when working with a vector of vectors, the buffer
-    // is not initialized correctly when working with large matrices.
-    std::vector<T> flattened(nRows * nCols);
-    for (int i = 0; i < nRows; i++) {
-        for (int j = 0; j < nCols; j++) {
-            flattened[i * nCols + j] = this->grid[i][j];
-        }
-    }
 
     std::cout << "Copying grid to buffer..." << std::endl;
     
     // We copy the data from the grid to the buffer
-    cl_int err = queue.enqueueWriteBuffer(buffer, CL_TRUE, 0, sizeof(T) * this->nRows * this->nCols, flattened.data());
-    
-    // Se divide la matriz en partes más pequeñas y se transfieren a través de la cola de comandos
-    // for (int i = 0; i < numBlocks; i++) {
-    //     const int offset = i * blockSize * numThreads;
-    //     const int size = std::min(static_cast<cl_uint> (nRows * nCols) - offset, blockSize * numThreads);
-
-    //     cl_int err = queue.enqueueWriteBuffer(buffer, CL_TRUE, sizeof(T) * offset, sizeof(T) * size, this->grid.data() + offset);
-    //     if (err != CL_SUCCESS) {
-    //         std::cerr << "Error al transferir datos: " << err << std::endl;
-    //     }
-    // }
+    cl_int err = queue.enqueueWriteBuffer(buffer, CL_TRUE, 0, sizeof(T) * this->nRows * this->nCols, this->grid.data());
 
     // We verify that the data was copied correctly
     if (err != CL_SUCCESS) {
@@ -167,11 +137,47 @@ void Grid<T>::populateRandomOpenCL(double percentage)
     std::default_random_engine generator(seed);
     std::uniform_real_distribution<float> distribution(0.0, 1.0);
     
-    std::vector<T> flatData(nRows * nCols);
+    // std::vector<T> flatData(nRows * nCols);
     for (int i = 0; i < nRows * nCols; i++) {
-        flatData[i] = (distribution(generator) < percentage) ? 1 : 0;
+        this->grid[i] = (distribution(generator) < percentage) ? 1 : 0;
     }
+    this->getQueue().enqueueWriteBuffer(this->getBuffer(), CL_TRUE, 0, sizeof(T) * nRows * nCols, this->grid.data());
+}
+
+template <typename T>
+void Grid<T>::staticPopulate(){
+    // create a vector with pre-defined values
+    std::vector<T> flatData(nRows * nCols);
+
+    // https://en.wikipedia.org/wiki/Wikipedia:Featured_picture_candidates/Game_of_Life_glider#/media/File:Game_of_life_animated_glider.gif
+    for (int i = 0; i < nRows * nCols; i++) {
+        flatData[i] = (i == 1 || i == (nCols + 2) || i == (2 * nCols) || i == (2 * nCols + 1) || i == (2 * nCols + 2)) ? 1 : 0;
+    }
+
     this->getQueue().enqueueWriteBuffer(this->getBuffer(), CL_TRUE, 0, sizeof(T) * nRows * nCols, flatData.data());
+}
+
+template <typename T>
+void Grid<T>::initializeBoardFromFile(int nRows, int nCols, const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Error opening file: " + filename);
+    }
+
+    std::vector<T> grid(nRows * nCols);
+    uint value;
+    for (int i = 0; i < nRows; ++i) {
+        for (int j = 0; j < nCols; ++j) {
+            if (file >> value) {
+                int index = i * nCols + j;
+                grid[index] = value;
+            } else {
+                throw std::runtime_error("Error reading file: " + filename);
+            }
+        }
+    }
+    this->getQueue().enqueueWriteBuffer(this->getBuffer(), CL_TRUE, 0, sizeof(T) * nRows * nCols, grid.data());
+    file.close();
 }
 
 template class Grid<int>;
