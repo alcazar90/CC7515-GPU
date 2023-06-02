@@ -46,10 +46,10 @@ __global__ void gameOfLifeKernel(const ubyte* grid, int nRows, int nCols,
 
 
 /* Main Program */
-int main() {
+int main(int argc, char* argv[]) {
 
     // Inicializador - Configuracion de parámetros del juego
-    initGameConfig();
+    initGameConfig(argc, argv);
 
     // Allocate memory for the game grid
     uint gridSize = NROWS * NCOLS;
@@ -68,11 +68,11 @@ int main() {
     }
 
     std::cout << "Welcome to the game of life. We will play " << NITER << " generations...and the universe will be a grid of size " << NROWS << "x" << NCOLS << std::endl;
-    std::cout << "Here is your initial board configuration:\n";
-    std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
+    //std::cout << "Here is your initial board configuration:\n";
+    //std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
 
     // CUDA config
-    ushort threadsCount = NCOLS * NROWS;
+    ushort threadsCount = THREADS;
     assert((NCOLS * NROWS) % threadsCount == 0);
     size_t reqBlocksCount = (NCOLS * NROWS) / threadsCount;
     ushort blocksCount = (ushort)std::min((size_t)32768, reqBlocksCount);
