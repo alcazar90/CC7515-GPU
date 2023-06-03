@@ -52,8 +52,52 @@ int main(int argc, char* argv[]) {
         board_in->initializeBoardFromFile(NROWS, NCOLS, filename);    
     }
 
-    // The kernel source code is created as a string
-    const char *kernelSource =
+    const char* kernelSource;
+
+    if(type_kernel){
+        // with ifs kernel
+        std::cout << "Using kernel with ifs" << std::endl;
+        kernelSource =
+        "__kernel void Kernel(__global const int* input, __global int* output, int nRows, int nCols) {\n"
+        "    int idx = get_global_id(0);\n"
+        "    int x = idx % nCols;\n"
+        "    int y = idx / nCols;\n"
+        "\n"
+        "    int neighbours = 0;\n"
+        "\n"
+        "    if (x > 0) {\n"
+        "        neighbours += input[idx - 1];\n"
+        "        if (y > 0) {\n"
+        "            neighbours += input[idx - nCols - 1];\n"
+        "        }\n"
+        "        if (y < nRows - 1) {\n"
+        "            neighbours += input[idx + nCols - 1];\n"
+        "        }\n"
+        "    }\n"
+        "\n"
+        "    if (x < nCols - 1) {\n"
+        "        neighbours += input[idx + 1];\n"
+        "        if (y > 0) {\n"
+        "            neighbours += input[idx - nCols + 1];\n"
+        "        }\n"
+        "        if (y < nRows - 1) {\n"
+        "            neighbours += input[idx + nCols + 1];\n"
+        "        }\n"
+        "    }\n"
+        "\n"
+        "    if (y > 0) {\n"
+        "        neighbours += input[idx - nCols];\n"
+        "    }\n"
+        "    if (y < nRows - 1) {\n"
+        "        neighbours += input[idx + nCols];\n"
+        "    }\n"
+        "\n"
+        "    output[idx] = (neighbours == 3 || (neighbours == 2 && input[idx] == 1)) ? 1 : 0;\n"
+        "}\n";
+    }else{
+        // without ifs kernel
+        std::cout << "Using kernel without ifs" << std::endl;
+        kernelSource =
         "__kernel void Kernel(__global const int* input, __global int* output, int nRows, int nCols) {\n"
         "    int worldSize = nRows * nCols;\n"
         "    int cell = get_group_id(0) * get_local_size(0) + get_local_id(0);\n" // blockId * blockSize + threadId 
@@ -69,6 +113,10 @@ int main(int argc, char* argv[]) {
         "        output[x + y] = aliveCells == 3 || (aliveCells == 2 && input[x + y]) ? 1 : 0;\n"
         "    }\n"
         "}\n";
+    }
+
+    // show the kernel
+    std::cout << kernelSource << std::endl;
 
     // The program is created from the source code
     cl::Program program(board_in->getContext(), kernelSource);
@@ -92,11 +140,6 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // show the CL_DEVICE_MAX_COMPUTE_UNITS of the device
-    cl_uint max_compute_units;
-    device.getInfo(CL_DEVICE_MAX_COMPUTE_UNITS, &max_compute_units);
-    std::cout << "CL_DEVICE_MAX_COMPUTE_UNITS: " << max_compute_units << std::endl;
-
     // OpenCL config
     cl::NDRange localWorkSize(THREADS);
     assert((NCOLS * NROWS) % THREADS == 0);
@@ -115,44 +158,6 @@ int main(int argc, char* argv[]) {
     // Create a variable to store the total time   
     double itime = 0.0;
     auto start = std::chrono::steady_clock::now();
-
-    // for (int i = 0; i < NITER; i++) {
-
-    //     // std::cout << "Generation " << i << "\n" << std::endl;
-
-    //     // Execute the kernel
-    //     err = board_in->getQueue().enqueueNDRangeKernel(kernel, cl::NullRange, cl::NDRange(NROWS, NCOLS), cl::NullRange, NULL, &kernelEvent);
-    //     if (err != CL_SUCCESS) {
-    //         std::cerr << "Error executing kernel: " << err << std::endl;
-    //         return 1;
-    //     }
-
-    //     kernelEvent.wait();
-
-    //     // Copy the data from the buffer of "board_out" to the buffer of "board_in"
-    //     err = board_in->getQueue().enqueueCopyBuffer(board_out->getBuffer(), board_in->getBuffer(), 0, 0, sizeof(int) * NROWS * NCOLS);
-    //     if (err != CL_SUCCESS) {
-    //         std::cerr << "Error copying data from buffer: " << err << std::endl;
-    //         return 1;
-    //     }
-
-
-    //     // read the buffer from the device
-    //     cl_int err1 = board_out->getQueue().enqueueReadBuffer(board_out->getBuffer(), CL_TRUE, 0, sizeof(int) * NROWS * NCOLS, grid.data(), NULL, &event);
-    //     if (err1 != CL_SUCCESS) {
-    //         std::cerr << "Error reading buffer: " << err1 << std::endl;
-    //         return 1;
-    //     }
-
-    //     event.wait();
-    //     for (int i = 0; i < NROWS; i++) {
-    //         for (int j = 0; j < NCOLS; j++) {
-    //             std::cout << grid[i * NCOLS + j] << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    //     std::cout << "---------------------------------------" << std::endl;
-    // }
     
     for (int i = 0; i < NITER; i++) {
 

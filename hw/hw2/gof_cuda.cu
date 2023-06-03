@@ -44,6 +44,56 @@ __global__ void gameOfLifeKernel(const ubyte* grid, int nRows, int nCols,
          }
 }
 
+__global__ void gameOfLifeKernelIf(const unsigned char *grid, int nRows, int nCols, unsigned char *result)
+{
+    int idx = (blockIdx.x * blockDim.x) + threadIdx.x;
+
+    if (idx < nRows * nCols)
+    {
+        // Se obtienen las coordenadas de la celda actual
+        int x = idx % nCols;
+        int y = idx / nCols;
+
+        int neighbours = 0;
+
+        if (x > 0)
+        {
+            neighbours += grid[idx - 1];
+            if (y > 0)
+            {
+                neighbours += grid[idx - nCols - 1];
+            }
+            if (y < nRows - 1)
+            {
+                neighbours += grid[idx + nCols - 1];
+            }
+        }
+
+        if (x < nCols - 1)
+        {
+            neighbours += grid[idx + 1];
+            if (y > 0)
+            {
+                neighbours += grid[idx - nCols + 1];
+            }
+            if (y < nRows - 1)
+            {
+                neighbours += grid[idx + nCols + 1];
+            }
+        }
+
+        if (y > 0)
+        {
+            neighbours += grid[idx - nCols];
+        }
+        if (y < nRows - 1)
+        {
+            neighbours += grid[idx + nCols];
+        }
+
+        result[idx] = (neighbours == 3 || (neighbours == 2 && grid[idx] == 1)) ? 1 : 0;
+    }
+}
 
 /* Main Program */
 int main(int argc, char* argv[]) {
@@ -88,8 +138,11 @@ int main(int argc, char* argv[]) {
             std::cout << toString2D(grid, NROWS, NCOLS) << std::endl;
         }
 
-        // Launch the kernel
-        gameOfLifeKernel<<<blocksCount, threadsCount>>>(grid, NROWS, NCOLS, resultGrid);
+        if(type_kernel){
+            gameOfLifeKernelIf<<<blocksCount, threadsCount>>>(grid, NROWS, NCOLS, resultGrid);
+        }else{
+            gameOfLifeKernel<<<blocksCount, threadsCount>>>(grid, NROWS, NCOLS, resultGrid);
+        }
 
         // Wait for GPU to finish before processing the following generation
         cudaDeviceSynchronize();
@@ -104,7 +157,7 @@ int main(int argc, char* argv[]) {
 
     // Print the total time in seconds
     std::cout << "---------------------------------------" << std::endl;
-    std::cout << "Total time: " << itime / 1000000000.0 << " seconds" << std::endl;
+    std::cout << itime / 1000000000.0 <<std::endl;
 
     return 0;
 }

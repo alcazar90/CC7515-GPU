@@ -12,6 +12,7 @@ int NITER;
 int NROWS;
 int NCOLS;
 int THREADS;
+bool type_kernel;
 bool PRETTYPRINT;
 string filename;
 
@@ -24,6 +25,7 @@ void initGameConfig(int argc, char* argv[]) {
         PRETTYPRINT = (std::stoi(argv[4]) != 0);
         filename = argv[5];
         THREADS = std::stoi(argv[6]);
+        type_kernel = std::stoi(argv[7]);
     }else{
         std::cout << "Please enter the number of iterations: ";
         std::cin >> NITER;
@@ -38,6 +40,8 @@ void initGameConfig(int argc, char* argv[]) {
         std::cin >> filename;
         std::cout << "Please enter the number of threads: ";
         std::cin >> THREADS;
+        std::cout << "Select the version with 'ifs'(1) or without 'ifs'(0): ";
+        std::cin >> type_kernel;
     }
 
 }
