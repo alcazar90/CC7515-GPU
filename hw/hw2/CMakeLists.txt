@@ -11,8 +11,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(GTEST_LIB googletest)
 
 # Agregué las siguientes líneas para buscar OpenCL
-#find_package(OpenCL REQUIRED)
-#include_directories(${OpenCL_INCLUDE_DIRS})
+find_package(OpenCL REQUIRED)
+include_directories(${OpenCL_INCLUDE_DIRS})
 
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/${GTEST_LIB})
@@ -32,13 +32,13 @@ add_executable(gof_sequential
 
 # Ejecutable gof_opencl
 # ==============================================================================
-#add_executable(gof_opencl
-#    include/grid_opencl.h
-#    src/grid_opencl.cpp
-#    gof_opencl.cpp
-#)
+add_executable(gof_opencl
+   include/grid_opencl.h
+   src/grid_opencl.cpp
+   gof_opencl.cpp
+)
 
-#target_link_libraries(gof_opencl project ${OpenCL_LIBRARIES})
+target_link_libraries(gof_opencl project ${OpenCL_LIBRARIES})
 # ==============================================================================
 
 
