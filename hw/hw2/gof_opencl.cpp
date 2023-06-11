@@ -142,8 +142,9 @@ int main(int argc, char* argv[]) {
 
     // OpenCL config
     cl::NDRange localWorkSize(THREADS);
-    assert((NCOLS * NROWS) % THREADS == 0);
-    cl::NDRange globalWorkSize(NROWS * NCOLS);
+    ushort blocksCount = BLOCKS;
+    assert((blocksCount) % THREADS == 0);
+    cl::NDRange globalWorkSize(blocksCount / THREADS);
         
     cl::Event event;
     cl::Event kernelEvent;

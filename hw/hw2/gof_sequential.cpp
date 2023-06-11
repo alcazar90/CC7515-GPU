@@ -20,10 +20,10 @@ bool isAlive(Grid<int> &grid, int x, int y);
 int countNeighbours(Grid<int> &grid, int x, int y);
 
 /* Main Program */
-int main() {
+int main(int argc, char* argv[]) {
 
     // Inicializador - Configuracion de parámetros del juego
-    initGameConfig();
+    initGameConfig(argc, argv);
 
     Grid<int> board;
 
@@ -91,7 +91,7 @@ int main() {
 
     std::cout << "---------------------------------------" << std::endl;
     // print the total time in seconds
-    std::cout << "Total time: " << itime / 1000000000.0 << " seconds" << std::endl;
+    std::cout << itime / 1000000000.0 << std::endl;
 
     return 0;
 }

@@ -123,9 +123,9 @@ int main(int argc, char* argv[]) {
 
     // CUDA config
     ushort threadsCount = THREADS;
-    assert((NCOLS * NROWS) % threadsCount == 0);
-    size_t reqBlocksCount = (NCOLS * NROWS) / threadsCount;
-    ushort blocksCount = (ushort)std::min((size_t)32768, reqBlocksCount);
+    // assert((BLOCKS) % threadsCount == 0);
+    size_t reqBlocksCount = (BLOCKS) / threadsCount;
+    ushort blocksCount = reqBlocksCount; //(ushort)std::min((size_t)32768, reqBlocksCount);
 
     // Calculate the time it takes for the simulation
     double itime = 0.0;
