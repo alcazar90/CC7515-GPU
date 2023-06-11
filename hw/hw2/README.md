@@ -11,54 +11,42 @@ Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game
 1. Una célula nace de un espacio muerto si tiene 3 vecinos vivos.
 2. Una célula sobrevive en la próxima generación si tiene 2 o 3 vecinos. En caso contrario, o muere de subpoblación o sobrepoblación respectivamente.
 
-
-### TODOs
-
-1. Normalizar interfaz de `std::cin` para que script benchmark ejecute los programas.
-2. Agregar compilación de la implementación en CUDA a CMakeLists.txt, por ahora se compila de la siguiente forma. Ideal que el output quedé `./bin/gof_cuda` junto a los demás.
-    ```bash
-    nvcc gof_cuda.cu -o gof_cuda
-    ```
-3. Actualizar en `gof_sequential.cpp` el método `CountNeighbors` para que ocupe operaciones de modulo, considerando vecinos las diagonales y el tablero ciclico.
-4. Agregar en `./test/` algo relacionado o un README con validación funcional de las implementaciones de _Game of Life_, generar un GIF por cada output o crear test set según ciertas configuraciones de tableros y estados de prueba que se encuentran en `./config/boardXX.txt`.
-5. Crear gráficos y tablas con información del _benchmark_
-6. Agregar interfaz para visualizar el juego usando `GLFW`
-7. Implementar en Kokkos (?)
-
-### Referencias
-
-¿Cómo iterar a través de la fila del `grid`?
-
-```cpp
-int main() {
-    // inicializar grid de 10x5
-    grid = Grid<int>(10, 5);
-
-    // operador [] sobre escrito en grid para que entregue la ith fila
-    std::vector<int> row = grid[1];
-
-    // luego podemos iterar sobre el vector
-    std::cout << "Todas las celdas de la fila 2:";
-    for (auto i : row) {
-        std::cout << ' ' << i;
-    }
-    std::cout << '\n';
-}
+### Para ejecutar la tarea 2 se debe ejecutar el siguiente comando:
+```bash
+mkdir build
+cd build
+cmake ..
+make
 ```
+### Esto creará tres ejecutables en la carpeta `bin`. Para ejecutar cada uno de ellos se debe ejecutar el siguiente comando:
+```bash
+./bin/<nombre_ejecutable>
+``` 
 
-Para acceder a información de celdas especificas usar `grid.get(x, y)`:
+### Al inicio de cada programa se le pedirá al usuario que ingrese los parámetros de la simulación. Estos son:
+- Número de iteraciones.
+- Número de filas.
+- Número de columnas.
+- Visualización de la simulación (Sí=1 o No=0).
+- Cargar un archivo de configuración de la grilla o generarla aleatoriamente.
+- - Si se carga un archivo, se debe ingresar el nombre del archivo: './config/board02.txt'
+- Número de threads.
+- Seleccionar la versión del kernel (Con ifs=1 o Sin ifs=0).
+- Número de bloques.
 
-```cpp
-int main() {
-    // inicializar grid de 10x5
-    grid = Grid<int>(10, 5);
+### Ejemplo de ejecución:
 
-    // acceder a la celda 2, 2
-    std::cout << "grid.get(1, 1): " << grid.get(1, 1) << std::endl;
-
-    // esto arroja la excepcción std::out_of_range("Invalid Index")
-    std::cout << "grid.get(100, 100): " << grid.get(100, 100) << std::endl;
-
-}
+```bash
+~/CC7515-GPU/hw/hw2/build$ ../bin/gof_cuda 
+Please enter the number of iterations: 5
+Now we will be set the initial grid configuration...
+Please enter the number of rows: 32
+Please enter the number of columns: 32
+Do you want to visualize the game? (true=1 or false=0): 1
+Specify the name of the file to initialize the grid. If you want to initialize randomly, write 'RANDOM': ../config/board02.txt
+Please enter the number of threads: 32
+Select the version with 'ifs'(1) or without 'ifs'(0): 0
+Please enter the number of blocks: 32
+Welcome to the game of life. We will play 5 generations...and the universe will be a grid of size 32x32
 ```
 
