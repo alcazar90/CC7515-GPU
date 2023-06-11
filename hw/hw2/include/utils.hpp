@@ -12,6 +12,7 @@ int NITER;
 int NROWS;
 int NCOLS;
 int THREADS;
+int BLOCKS;
 bool type_kernel;
 bool PRETTYPRINT;
 string filename;
@@ -42,6 +43,8 @@ void initGameConfig(int argc, char* argv[]) {
         std::cin >> THREADS;
         std::cout << "Select the version with 'ifs'(1) or without 'ifs'(0): ";
         std::cin >> type_kernel;
+        std::cout << "Please enter the number of blocks: ";
+        std::cin >> BLOCKS;
     }
 
 }
