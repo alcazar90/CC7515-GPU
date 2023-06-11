@@ -11,6 +11,15 @@ Más acerca <a href="https://conwaylife.com/book/" target="_blank">Conway's Game
 1. Una célula nace de un espacio muerto si tiene 3 vecinos vivos.
 2. Una célula sobrevive en la próxima generación si tiene 2 o 3 vecinos. En caso contrario, o muere de subpoblación o sobrepoblación respectivamente.
 
+### Clonar el repositorio e iniciar submodulo de testing.
+
+```sh
+git clone https://github.com/alcazar90/CC7515-GPU
+git submodule init
+git submodule update
+cd hw/hw2
+```
+
 ### Para ejecutar la tarea 2 se debe ejecutar el siguiente comando:
 ```bash
 mkdir build
