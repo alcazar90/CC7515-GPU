@@ -1,14 +1,4 @@
-# Assignment 3: Fractal Shaders 🪞
-
-<table border=0 align=center>
-    <tbody>
-        <tr>
-     	    <td width="27%" align="center"> <img src="./assets/mandelbrot.png"> </td>
-			<td width="27%" align="center"> <img src="./assets/julia-set-triple-spiral.png"></td>
-			<td width="27%" align="center"> <img src="./assets/julia-set-2.png" alt="Julia Set c=0.355534,-0.337292"></td>       
-        </tr>
-    </tbody>
-</table>
+# Assignment 3: Fractal Shaders with OpenGL🧨
 
 <br>
 
@@ -16,9 +6,13 @@
 <img src="./assets/output.gif" alt="Source: Julia Set Dynamics, video created with julia-dyn.py" width="640px">
 </center>
 
+<br>
+
 **tl;dr**: In this project...
 
 ## Usage
+
+There are two files that generates static images of the Mandelbrot and Julia sets: `mandelbrot.py` and `julia.py`. 
 
 ```bash
 python mandelbrot.py --width 680 --height 680 --max_iteration 50
@@ -29,16 +23,26 @@ python julia.py --max_iterations 75 --cx -0.123 --cy 0.745 # douady's rabbit
 python julia.py --max_iterations 75 --cx -0.75 --cy 0.11 # seahorse valley
 python julia.py --max_iterations 75 --cx -0.74543 --cy 0.11301 # triple spiral
 python julia.py --max_iterations 75 --cx -0.745 --cy 0.1135 # devil's claws
-python julia-dyn.py --max_iterations 230 --width 1260 --mincolor -0.066 --maxcolor 0.53 --speed 0.84
 ```
+You can generate images like this:
+<table border=0 align=center>
+    <tbody>
+        <tr>
+     	    <td width="27%" align="center"> <img src="./assets/mandelbrot.png"> <code>mandelbrot.py</code></td>
+			<td width="27%" align="center"> <img src="./assets/julia-set-triple-spiral.png"><code>julia.py</code></td>
+			<td width="27%" align="center"> <img src="./assets/julia-set-2.png" alt="Julia Set c=0.355534,-0.337292"><code>julia.py</code></td>       
+        </tr>
+    </tbody>
+</table>
 
-It's possible to write videos with the `--out` flag. For instance, we can save a video called `lala.mp4`:
+
+There is also a file that generates a video of the Julia set: `julia-dyn.py`. For instance, we can save a video called `lala.mp4` using the flag `--out`:
 
 ```bash
 python julia-dyn.py --max_iterations 250 --width 1260 --mincolor -0.066 --maxcolor 0.56777 --speed 1.45 --out lala
 ```
 
-Then, convert into a gif:
+Then, convert it into a gif like the one above using ffmpeg:
 
 ```bash
 ffmpeg -i lala.mp4 -vf "fps=30,scale=640:-1:flags=lanczos" -c:v gif output.gif
@@ -119,11 +123,63 @@ We can define the set of complex numbers $c$ for which the iterated function $f(
 **TODO:** Fractals are used heavily uniform variables across the vertex and fragment shaders. The vertex shader is responsible for transforming the vertices of the geometry into screen space. The vertex shader is also responsible for passing the uniform variables to the fragment shader.
 
 
+```C
+#version 130
+
+uniform float uWidth;
+uniform float uHeight;
+uniform int uMaxIterations;
+uniform vec2 uCenter;
+uniform float uScale;
+uniform sampler1D uColorPalette;
+uniform vec2 uConstant;
+uniform vec2 uColorInterpolation;
+
+out vec4 FragColor;
+
+// A color function that maps the iteration count to a color from the palette
+vec4 getColor(int iterations) {
+    float t = clamp(float(iterations) / float(uMaxIterations), 0.0, 1.0);
+    //float scale = 1.0 - smoothstep(0.0, 0.56, t);
+    float scale = 1.0 - smoothstep(uColorInterpolation.x, uColorInterpolation.y, t);
+    return texture1D(uColorPalette, scale);
+}
+
+void main() {
+    vec2 z = vec2((gl_FragCoord.x - uWidth / 2.0) * uScale / uWidth + uCenter.x,
+                  (gl_FragCoord.y - uHeight / 2.0) * uScale / uHeight + uCenter.y);
+
+    int iterations = 0;
+
+    for (int i = 0; i < uMaxIterations; i++) {
+        float x = (z.x * z.x - z.y * z.y) + uConstant.x;
+        float y = (z.y * z.x + z.x * z.y) + uConstant.y;
+
+        if (length(z) > 2.0) 
+            break;
+        
+        z.x = x;
+        z.y = y;
+
+        iterations++;
+    }
+
+    // Calculate the color based on the iteration count
+    vec4 color = getColor(iterations);
+
+    // Assign the fragment color using the color from the getColor function
+    FragColor = vec4(color.rgb, 1.0);
+}
+```
+
 ## Dependencies
+
+Create a new python environment with `python>=3.8` and install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
+
 
 ## Resources
 
