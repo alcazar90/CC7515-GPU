@@ -12,6 +12,10 @@
 
 <br>
 
+
+https://github.com/alcazar90/CC7515-GPU/assets/14035919/c683a153-8209-4da4-b451-c3b552e69a63
+
+
 **tl;dr**: In this project...
 
 ## Usage
