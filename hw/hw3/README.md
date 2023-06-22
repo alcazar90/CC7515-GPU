@@ -1,11 +1,14 @@
 # Assignment 3: Shaders
 
-
-<div style="display: flex;">
-  <img src="./assets/mandelbrot.png" alt="Mandelbrot set" style="width: 33.33%;">
-  <img src="./assets/julia-set-triple-spiral.png" alt="Julia Set Triple spiral" style="width: 33.33%;">
-  <img src="./assets/julia-set-2.png" alt="Julia Set c=0.355534, -0.337292i" style="width: 33.33%;">
-</div>
+<table border=0 align=center>
+    <tbody>
+        <tr>
+     	    <td width="27%" align="center"> <img src="./assets/mandelbrot.png"> </td>
+			<td width="27%" align="center"> <img src="./assets/julia-set-triple-spiral.png"></td>
+			<td width="27%" align="center"> <img src="./assets/julia-set-2.png" alt="Julia Set c=0.355534,-0.337292"></td>       
+        </tr>
+    </tbody>
+</table>
 
 <br>
 
@@ -41,7 +44,9 @@ Dynamics refers that we apply the function over and over and over...
 
 $$
 z_{0}\rightarrow z_{1}\rightarrow z_{2}\rightarrow\dots \rightarrow z_{n+1}
-\\
+$$
+
+$$
 z_{n+1} = f(z_{n})
 $$
 
