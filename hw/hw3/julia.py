@@ -11,7 +11,7 @@ from OpenGL.GL import *
 from OpenGL.GL.shaders import compileShader, compileProgram
 
 
-from utils import read_shader_file, load_texture
+from utils import read_shader_file, load_texture, draw_quad
 
 
 # Argparser
@@ -24,6 +24,8 @@ parser.add_argument('--height', type=int, default=764, help='Height of the windo
 parser.add_argument('--max_iterations', type=int, default=100, help='Maximum number of iterations')
 parser.add_argument('--cx', type=float, default=-0.5, help='x-component of constant seed')
 parser.add_argument('--cy', type=float, default=0.0, help='y-component of constant seed')
+parser.add_argument('--mincolor', type=float, default=0.0, help='min color for smoothstep to interpolate')
+parser.add_argument('--maxcolor', type=float, default=0.35, help='max color for smoothstep to interpolate')
 # Parse the command-line arguments
 args = parser.parse_args()
 
@@ -36,7 +38,8 @@ QUAD_MARGIN = 0.1   # Adjust the magin size as needed
 # Julia set parameters
 MAX_ITERATIONS = args.max_iterations
 CONSTANT_X, CONSTANT_Y = args.cx, args.cy
-CENTER_X, CENTER_Y = -0.5, 0.0
+CENTER_X, CENTER_Y = 0.0, 0.0
+MIN_COLOR, MAX_COLOR = args.mincolor, args.maxcolor
 ZOOM_LEVEL = 1.0
 VERTEX_SHADER_PATH = "./shaders/vertex_shader.glsl"
 FRAGMENT_SHADER_PATH = "./shaders/julia_shader.glsl"
@@ -105,6 +108,7 @@ def main():
     color_palette_location = glGetUniformLocation(shader_program_id, "uColorPalette")
     scale_location = glGetUniformLocation(shader_program_id, "uScale")
     center_location = glGetUniformLocation(shader_program_id, "uCenter")
+    color_interpolation_location = glGetUniformLocation(shader_program_id, "uColorInterpolation")
 
     # Set the uniform values
     glUniform1f(width_location, WIDTH)
@@ -113,6 +117,7 @@ def main():
     glUniform2f(constant_seed_location, CONSTANT_X, CONSTANT_Y)
     glUniform1f(scale_location, ZOOM_LEVEL)
     glUniform2f(center_location, CENTER_X, CENTER_Y)
+    glUniform2f(color_interpolation_location, MIN_COLOR, MAX_COLOR)
 
     # Bind the color palette texture to the texture unit 0
     glActiveTexture(GL_TEXTURE0)
@@ -135,16 +140,7 @@ def main():
         glfw.set_scroll_callback(window, lambda w, x, y: scroll_callback(w, x, y, scale_location))
 
        # Draw a fullscreen quad
-        glBegin(GL_QUADS)
-        glTexCoord2f(0, 0)
-        glVertex2f(-1.0 + QUAD_MARGIN, -1.0 + QUAD_MARGIN)
-        glTexCoord2f(1, 0)
-        glVertex2f(1.0 - QUAD_MARGIN, -1.0 + QUAD_MARGIN)
-        glTexCoord2f(1, 1)
-        glVertex2f(1.0 - QUAD_MARGIN, 1.0 - QUAD_MARGIN)
-        glTexCoord2f(0, 1)
-        glVertex2f(-1.0 + QUAD_MARGIN, 1.0 - QUAD_MARGIN)
-        glEnd()
+        draw_quad(margin=QUAD_MARGIN)
 
         # Swap front and back buffers
         glfw.swap_buffers(window)

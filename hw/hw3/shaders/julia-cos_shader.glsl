@@ -7,16 +7,26 @@ uniform vec2 uCenter;
 uniform float uScale;
 uniform sampler1D uColorPalette;
 uniform vec2 uConstant;
-uniform vec2 uColorInterpolation;
 
 out vec4 FragColor;
 
 // A color function that maps the iteration count to a color from the palette
 vec4 getColor(int iterations) {
     float t = clamp(float(iterations) / float(uMaxIterations), 0.0, 1.0);
-    //float scale = 1.0 - smoothstep(0.0, 0.56, t);
-    float scale = 1.0 - smoothstep(uColorInterpolation.x, uColorInterpolation.y, t);
+    float scale = 1.0 - smoothstep(0.0, 0.36, t);
     return texture1D(uColorPalette, scale);
+}
+
+// Cosh function
+float cosh(float x) {
+    float tmp = exp(x);
+    return (tmp + 1.0 / tmp) / 2.0;
+}
+
+// Sinh function
+float sinh(float x) {
+    float tmp = exp(x);
+    return (tmp - 1.0 / tmp) / 2.0;
 }
 
 void main() {
@@ -26,8 +36,8 @@ void main() {
     int iterations = 0;
 
     for (int i = 0; i < uMaxIterations; i++) {
-        float x = (z.x * z.x - z.y * z.y) + uConstant.x;
-        float y = (z.y * z.x + z.x * z.y) + uConstant.y;
+		float x = cos(z.x) * cosh(z.y) + uConstant.x;
+		float y = -sin(z.x) * sinh(z.y) + uConstant.y;
 
         if (length(z) > 2.0) 
             break;

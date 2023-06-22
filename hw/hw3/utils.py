@@ -31,3 +31,15 @@ def load_texture(image_path):
 
     return texture_id
 
+
+def draw_quad(margin):
+    glBegin(GL_QUADS)
+    glTexCoord2f(0, 0)
+    glVertex2f(-1.0 + margin, -1.0 + margin)
+    glTexCoord2f(1, 0)
+    glVertex2f(1.0 - margin, -1.0 + margin)
+    glTexCoord2f(1, 1)
+    glVertex2f(1.0 - margin, 1.0 - margin)
+    glTexCoord2f(0, 1)
+    glVertex2f(-1.0 + margin, 1.0 - margin)
+    glEnd()

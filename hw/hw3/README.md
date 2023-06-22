@@ -12,6 +12,7 @@
 
 <br>
 
+
 **tl;dr**: In this project...
 
 ## Usage
@@ -25,6 +26,13 @@ python julia.py --max_iterations 75 --cx -0.123 --cy 0.745 # douady's rabbit
 python julia.py --max_iterations 75 --cx -0.75 --cy 0.11 # seahorse valley
 python julia.py --max_iterations 75 --cx -0.74543 --cy 0.11301 # triple spiral
 python julia.py --max_iterations 75 --cx -0.745 --cy 0.1135 # devil's claws
+python julia-dyn.py --max_iterations 230 --width 1260 --mincolor -0.066 --maxcolor 0.53 --speed 0.84
+```
+
+It's possible to write videos with the `--out` flag. For instance, we can save a video called `lala.mp4`:
+
+```bash
+python julia-dyn.py --max_iterations 250 --width 1260 --mincolor -0.066 --maxcolor 0.56777 --speed 1.45 --out lala
 ```
 
 ## Math Background: Holomorphic Dynamics
