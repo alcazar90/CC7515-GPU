@@ -1,4 +1,4 @@
-# Assignment 3: Shaders
+# Assignment 3: Fractal Shaders 🪞
 
 <table border=0 align=center>
     <tbody>
