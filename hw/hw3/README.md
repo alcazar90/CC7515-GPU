@@ -12,6 +12,10 @@
 
 <br>
 
+<center>
+<img src="./assets/output.gif" alt="Source: Julia Set Dynamics, video created with julia-dyn.py" width="640px">
+</center>
+
 **tl;dr**: In this project...
 
 ## Usage
@@ -32,6 +36,12 @@ It's possible to write videos with the `--out` flag. For instance, we can save a
 
 ```bash
 python julia-dyn.py --max_iterations 250 --width 1260 --mincolor -0.066 --maxcolor 0.56777 --speed 1.45 --out lala
+```
+
+Then, convert into a gif:
+
+```bash
+ffmpeg -i lala.mp4 -vf "fps=30,scale=640:-1:flags=lanczos" -c:v gif output.gif
 ```
 
 ## Math Background: Holomorphic Dynamics
