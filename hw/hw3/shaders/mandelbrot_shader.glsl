@@ -11,7 +11,6 @@ out vec4 FragColor;
 
 // A color function that maps the iteration count to a color from the palette
 vec4 getColor(int iterations) {
-    //return texture1D(uColorPalette, (iterations == uMaxIterations ? 0.0 : float(iterations)) / 100.0);
     float t = clamp(float(iterations) / float(uMaxIterations), 0.0, 1.0);
     float scale = 1.0 - smoothstep(0.0, 0.36, t);
     return texture1D(uColorPalette, scale);
@@ -26,8 +25,7 @@ void main() {
     vec2 z = vec2(0.0, 0.0);
     int iterations = 0;
 
-    for (int i = 0; i < uMaxIterations; i++)
-    {
+    for (int i = 0; i < uMaxIterations; i++) {
         if (length(z) > 2.0)
             break;
 

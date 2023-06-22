@@ -32,7 +32,6 @@ WIDTH, HEIGHT = args.width, args.height # Dimensions of the window
 QUAD_MARGIN = 0.1   # Adjust the magin size as needed
 
 # Mandelbrot set parameters
-#MAX_ITERATIONS = 100
 MAX_ITERATIONS = args.max_iterations
 CENTER_X, CENTER_Y = -0.5, 0.0
 ZOOM_LEVEL = 1.0
@@ -116,17 +115,6 @@ def main():
     glBindTexture(GL_TEXTURE_1D, color_palette_texture)
     glUniform1i(color_palette_location, 0)  # Set the texture unit to 0
 
-    # Define the color palette
-    #color_palette = np.array([
-    #    [1.0, 0.0, 0.0],    # Red
-    #    [0.0, 1.0, 1.0],    # Green
-    #    [0.0, 0.0, 1.0],    # Blue
-    #    [1.0, 1.0, 0.0],    # Yellow
-    #], dtype=np.float32)
-
-    # Set the uniform value for the color palette
-    #glUniform3fv(color_palette_location, len(color_palette), color_palette)
-
     # Set up the viewport
     glViewport(0, 0, WIDTH, HEIGHT)
 
@@ -144,13 +132,13 @@ def main():
 
        # Draw a fullscreen quad
         glBegin(GL_QUADS)
-        glTexCoord2f(0, 0);
+        glTexCoord2f(0, 0)
         glVertex2f(-1.0 + QUAD_MARGIN, -1.0 + QUAD_MARGIN)
-        glTexCoord2f(1, 0);
+        glTexCoord2f(1, 0)
         glVertex2f(1.0 - QUAD_MARGIN, -1.0 + QUAD_MARGIN)
-        glTexCoord2f(1, 1);
+        glTexCoord2f(1, 1)
         glVertex2f(1.0 - QUAD_MARGIN, 1.0 - QUAD_MARGIN)
-        glTexCoord2f(0, 1);
+        glTexCoord2f(0, 1)
         glVertex2f(-1.0 + QUAD_MARGIN, 1.0 - QUAD_MARGIN)
         glEnd()
 
