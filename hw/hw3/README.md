@@ -13,6 +13,12 @@
 <br>
 
 
+<<<<<<< HEAD
+=======
+https://github.com/alcazar90/CC7515-GPU/assets/14035919/c683a153-8209-4da4-b451-c3b552e69a63
+
+
+>>>>>>> 540c6aa997474d68363cf2f33767dd695b5822d4
 **tl;dr**: In this project...
 
 ## Usage
