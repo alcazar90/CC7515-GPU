@@ -1,11 +1,13 @@
 # Assignment 3: Shaders
 
-<center>
-<img src="./assets/mandelbrot.png" alt="Mandelbrot set" width="400px">
-</center>
+
+<div style="display: flex;">
+  <img src="./assets/mandelbrot.png" alt="Mandelbrot set" style="width: 33.33%;">
+  <img src="./assets/julia-set-triple-spiral.png" alt="Julia Set Triple spiral" style="width: 33.33%;">
+  <img src="./assets/julia-set-2.png" alt="Julia Set c=0.355534, -0.337292i" style="width: 33.33%;">
+</div>
 
 <br>
-
 
 **tl;dr**: In this project...
 
@@ -15,6 +17,11 @@
 python mandelbrot.py --width 680 --height 680 --max_iteration 50
 python mandelbrot.py --width 680 --height 680 --max_iteration 75
 python mandelbrot.py --width 680 --height 680 --max_iteration 100
+python julia.py --max_iterations 75 --cx -0.8 --cy -0.156 # standard julia set
+python julia.py --max_iterations 75 --cx -0.123 --cy 0.745 # douady's rabbit
+python julia.py --max_iterations 75 --cx -0.75 --cy 0.11 # seahorse valley
+python julia.py --max_iterations 75 --cx -0.74543 --cy 0.11301 # triple spiral
+python julia.py --max_iterations 75 --cx -0.745 --cy 0.1135 # devil's claws
 ```
 
 ## Math Background: Holomorphic Dynamics
@@ -31,8 +38,9 @@ The derivative of a holomorphic function exists at every point in its domain, an
 For some function $f(z)$, the Mandelbrot set is the set of complex numbers $c$ for which the iterated function $f(z)$ does not diverge when starting with $z=0$.
 
 Dynamics refers that we apply the function over and over and over...
+
 $$
-z_{0}\stackrel{\tiny{f}}{\rightarrow} z_{1}\stackrel{\tiny{f}}{\rightarrow}z_{2}\stackrel{\tiny{f}}\rightarrow\dots
+z_{0}\rightarrow z_{1}\rightarrow z_{2}\rightarrow\dots \rightarrow z_{n+1}
 \\
 z_{n+1} = f(z_{n})
 $$
@@ -40,11 +48,13 @@ $$
 ### Rational Functions
 
 A function is rational if it can be expressed as the quotient of two polynomials, such as
+
 $$
 f(z) = \frac{2z^3 + 1}{3z^2}
 $$ 
 
 or, more generally,
+
 $$
 f(z) = \frac{a_{n}z^{n}+\dots+a_{0}}{b_{m}z^{m}+\dots + b_{0}}
 $$
