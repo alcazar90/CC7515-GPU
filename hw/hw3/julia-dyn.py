@@ -19,7 +19,7 @@ from utils import read_shader_file, load_texture, draw_quad
 # Argparser
 # ------------------------------------------------------------------------------ 
 # Create an argument parser
-parser = argparse.ArgumentParser(description='Mandelbrot set shader')
+parser = argparse.ArgumentParser(description='Julia set shader')
 # Add arguments for width, height, and max_iterations
 parser.add_argument('--width', type=int, default=1020, help='Width of the window')
 parser.add_argument('--height', type=int, default=764, help='Height of the window')
@@ -30,6 +30,7 @@ parser.add_argument('--mincolor', type=float, default=0.0, help='min color for s
 parser.add_argument('--maxcolor', type=float, default=0.35, help='max color for smoothstep to interpolate')
 parser.add_argument('--speed', type=float, default=1.25, help='speed of the animation')
 parser.add_argument('--out', type=str, default=None, help='Save a MP4 video')
+parser.add_argument('--julia_shader', type=str, default="julia_shader", help='Save a MP4 video')
 # Parse the command-line arguments
 args = parser.parse_args()
 
@@ -48,7 +49,7 @@ SPEED = args.speed
 OUTPUT_VIDEO = args.out
 ZOOM_LEVEL = 5.00
 VERTEX_SHADER_PATH = "./shaders/vertex_shader.glsl"
-FRAGMENT_SHADER_PATH = "./shaders/julia_shader.glsl"
+FRAGMENT_SHADER_PATH = "./shaders/" + args.julia_shader + ".glsl"
 TEXTURE_PATH = "./pal.ppm"
 
 # control parameters via callbacks
@@ -96,8 +97,8 @@ def main():
     # Create a video writer
     #-----------------------------------------------------------------------
     if OUTPUT_VIDEO is not None:
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        out = cv2.VideoWriter(OUTPUT_VIDEO + '.mov', fourcc, 60.0, (WIDTH, HEIGHT))
+        fourcc = cv2.VideoWriter_fourcc(*'MP4V')
+        out = cv2.VideoWriter(OUTPUT_VIDEO + '.mp4', fourcc, 60.0, (WIDTH, HEIGHT))
     #-----------------------------------------------------------------------
 
     # Load the color palette texture
@@ -191,6 +192,7 @@ def main():
     if OUTPUT_VIDEO is not None:
         out.release()
     glfw.terminate()
+
 
 if __name__ == "__main__":
     main()

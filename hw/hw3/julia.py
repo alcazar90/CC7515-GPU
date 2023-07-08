@@ -3,6 +3,7 @@
 Assignment 3: Fractal shaders, Julia sets
 Author: Cristóbal Alcázar, CC7515, 2023-1
 """
+import time
 import argparse
 import glfw
 import numpy as np
@@ -26,6 +27,7 @@ parser.add_argument('--cx', type=float, default=-0.5, help='x-component of const
 parser.add_argument('--cy', type=float, default=0.0, help='y-component of constant seed')
 parser.add_argument('--mincolor', type=float, default=0.0, help='min color for smoothstep to interpolate')
 parser.add_argument('--maxcolor', type=float, default=0.35, help='max color for smoothstep to interpolate')
+parser.add_argument('--julia_shader', type=str, default="julia_shader", help='Save a MP4 video')
 # Parse the command-line arguments
 args = parser.parse_args()
 
@@ -42,7 +44,7 @@ CENTER_X, CENTER_Y = 0.0, 0.0
 MIN_COLOR, MAX_COLOR = args.mincolor, args.maxcolor
 ZOOM_LEVEL = 1.0
 VERTEX_SHADER_PATH = "./shaders/vertex_shader.glsl"
-FRAGMENT_SHADER_PATH = "./shaders/julia_shader.glsl"
+FRAGMENT_SHADER_PATH = "./shaders/" + args.julia_shader + ".glsl"
 TEXTURE_PATH = "./pal.ppm"
 
 # control parameters via callbacks
@@ -66,6 +68,19 @@ def scroll_callback(window, x_offset, y_offset, scale_location):
     glUniform1f(scale_location, ZOOM_LEVEL)
 
 
+def key_callback(window, key, scancode, action, mods, constant_seed_location):
+    global constant_value
+
+    t = time.time()
+    # Increase the constant value when the Up arrow key is pressed
+    if key == glfw.KEY_T and action == glfw.PRESS:
+        t *= 1.1
+
+        CONSTANT_X = (np.sin(np.cos(t / 10) * 10) + np.cos(t * 2.0) / 4.0 + np.sin(t * 3.0) / 6.0) * 0.8
+        CONSTANT_Y = (np.cos(np.sin(t / 10) * 10) + np.sin(t * 2.0) / 4.0 + np.cos(t * 3.0) / 6.0) * 0.8
+        glUniform2f(constant_seed_location, CONSTANT_X, CONSTANT_Y)
+
+
 # Main program
 # ------------------------------------------------------------------------------
 def main():
@@ -76,8 +91,8 @@ def main():
     if not glfw.init():
         return
 
-    # Create a window
-    window = glfw.create_window(WIDTH, HEIGHT, f"Julia Shader with c=({CONSTANT_X}, {CONSTANT_Y})", None, None)
+    # Create a window"
+    window = glfw.create_window(WIDTH, HEIGHT, "Julia Shader Explorer", None, None)
     if not window:
         glfw.terminate()
         return
@@ -91,6 +106,8 @@ def main():
     # Loader the vertex
     vertex_shader = read_shader_file(VERTEX_SHADER_PATH)
     fragment_shader = read_shader_file(FRAGMENT_SHADER_PATH)
+    fragmet_shader2 = "./shaders/julia-cos_shader.glsl"
+    fragmet_shader3 = "./shaders/julia-exp_shader.glsl"
 
     # Create the shader program: first compile shaders, the compile the program 
     vertex_shader_id = compileShader(vertex_shader, GL_VERTEX_SHADER)
@@ -129,6 +146,9 @@ def main():
 
     # Set the mouse button callback function
     #glfw.set_mouse_button_callback(window, mouse_button_callback)
+
+    # Set the key callback function
+    glfw.set_key_callback(window, lambda w, x, y, t, z: key_callback(w, x, y, t, z, constant_seed_location))
 
     # Main loop
     while not glfw.window_should_close(window):

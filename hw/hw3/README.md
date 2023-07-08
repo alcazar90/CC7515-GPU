@@ -1,5 +1,7 @@
 # Assignment 3: Fractal Shaders with OpenGL🧨
 
+Author: Cristóbal Alcázar
+
 <br>
 
 <center>
@@ -35,7 +37,13 @@ You can generate images like this:
     </tbody>
 </table>
 
-
+```bash
+# standard julia shader
+python julia-dyn.py --max_iterations 160 --julia_shader julia_shader --cx 0.8 --cy -1.2 --speed 0.5
+# julia shader with cosine
+python julia-dyn.py --max_iterations 60 --julia_shader julia-cos_shader --cx 0.8 --cy -1.2 --speed 1.8
+python julia-dyn.py --max_iterations 40 --julia_shader julia-exp_shader --cx 0.8 --cy -1.2
+```
 There is also a file that generates a video of the Julia set: `julia-dyn.py`. For instance, we can save a video called `lala.mp4` using the flag `--out`:
 
 ```bash
