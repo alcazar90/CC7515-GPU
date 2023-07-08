@@ -10,7 +10,6 @@ Author: Cristóbal Alcázar
 
 <br>
 
-**tl;dr**: In this project...
 
 ## Usage
 
@@ -37,13 +36,6 @@ You can generate images like this:
     </tbody>
 </table>
 
-```bash
-# standard julia shader
-python julia-dyn.py --max_iterations 160 --julia_shader julia_shader --cx 0.8 --cy -1.2 --speed 0.5
-# julia shader with cosine
-python julia-dyn.py --max_iterations 60 --julia_shader julia-cos_shader --cx 0.8 --cy -1.2 --speed 1.8
-python julia-dyn.py --max_iterations 40 --julia_shader julia-exp_shader --cx 0.8 --cy -1.2
-```
 There is also a file that generates a video of the Julia set: `julia-dyn.py`. For instance, we can save a video called `lala.mp4` using the flag `--out`:
 
 ```bash
@@ -54,6 +46,17 @@ Then, convert it into a gif like the one above using ffmpeg:
 
 ```bash
 ffmpeg -i lala.mp4 -vf "fps=30,scale=640:-1:flags=lanczos" -c:v gif output.gif
+```
+
+We can use the last file to explore different julia shaders as follows:
+
+```bash:
+# standard julia shader
+python julia-dyn.py --max_iterations 160 --julia_shader julia_shader --cx 0.8 --cy -1.2 --speed 0.5
+# julia shader with cosine
+python julia-dyn.py --max_iterations 60 --julia_shader julia-cos_shader --cx 0.8 --cy -1.2 --speed 1.8
+# julia shader with exponential
+python julia-dyn.py --max_iterations 40 --julia_shader julia-exp_shader --cx 0.8 --cy -1.2
 ```
 
 ## Math Background: Holomorphic Dynamics
